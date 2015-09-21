@@ -90,7 +90,8 @@ def show_messages():
         a.decode() for a in application.db.smembers(
             session['user'] + ':friends')]
 
-    messages = filter(lambda e: e['user'] in friends, sorted(
+    messages = filter(lambda e: e['user'] in friends or e['user'] ==
+                      session['user'], sorted(
         [loads(message) for _, message in
         application.db.hgetall('messages').items()],
         key=lambda e: e['time'],))
