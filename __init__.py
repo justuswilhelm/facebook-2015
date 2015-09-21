@@ -51,6 +51,7 @@ def register_post():
     password = request.form['password']
 
     assert name != 'messages'
+    assert name not in application.db
 
     application.db.set(name, password)
     session['user'] = name
