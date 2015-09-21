@@ -1,3 +1,4 @@
+from functools import wraps
 from os import getenv
 
 from flask import (
@@ -7,6 +8,7 @@ from flask import (
     render_template,
     request,
     session,
+    url_for,
 )
 from redis import Redis
 
@@ -15,6 +17,15 @@ application.db = Redis.from_url(
     getenv('REDIS_URL', 'redis://localhost:6379/'))
 
 application.secret_key = 'LOL'
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user' not in session:
+            return redirect(url_for('login', next=request.url))
+        return f(*args, **kwargs)
+    return decorated_function
+
 
 @application.route("/")
 def index():
@@ -59,3 +70,9 @@ def login_post():
     else:
         flash("You were not loggin in successfully.")
         return redirect('/login')
+
+
+@application.route("/messages", methods=['get'])
+@login_required
+def show_messages():
+    return render_template('messages.html')
