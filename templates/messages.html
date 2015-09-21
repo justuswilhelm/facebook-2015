@@ -4,8 +4,13 @@
     There are no messages, you have no friends
   </h1>
   {% for message in messages %}
-    <h2>{{ message.user }} - {{ message.time }}</h2>
-    <p>{{message.message }}</p>
+  <h2>
+    <a href="/users/{{ message.user }}">
+      {{ message.user }}
+    </a>
+    - {{ message.time }}
+  </h2>
+  <p>{{message.message }}</p>
   {% endfor %}
 
   <hr>

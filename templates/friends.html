@@ -4,7 +4,9 @@
   <ul>
     {% for friend in friends %}
       <li>
-        {{ friend }} is your friend
+        <a href="/users/{{ friend }}">
+          {{ friend }} is your friend
+        </a>
       </li>
     {% endfor %}
   </ul>

@@ -135,6 +135,7 @@ def add_friend(name):
         flash("You have added {} as a friend".format(name))
     return redirect('/friends')
 
+
 @application.route("/users/<name>")
 @login_required
 def show_user_profile(name):
