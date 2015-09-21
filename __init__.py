@@ -86,10 +86,14 @@ def login_post():
 @application.route("/messages", methods=['get'])
 @login_required
 def show_messages():
-    messages = sorted(
+    friends = [
+        a.decode() for a in application.db.smembers(
+            session['user'] + ':friends')]
+
+    messages = filter(lambda e: e['user'] in friends, sorted(
         [loads(message) for _, message in
         application.db.hgetall('messages').items()],
-        key=lambda e: e['time'],)
+        key=lambda e: e['time'],))
     return render_template('messages.html', messages=messages)
 
 

@@ -1,22 +1,30 @@
 {% extends "site_base.html" %}
 {% block content %}
   <h1>
-    There are no messages, you have no friends
+    Messages
   </h1>
   {% for message in messages %}
-  <h2>
-    <a href="/users/{{ message.user }}">
-      {{ message.user }}
-    </a>
-    - {{ message.time }}
-  </h2>
-  <p>{{message.message }}</p>
+  <div class="row">
+    <div class="three columns">
+      <a href="/users/{{ message.user }}">
+        {{ message.user }}</a>
+      - {{ message.time|round|int }}
+    </div>
+    <div class="nine columns">
+      <p>{{message.message }}</p>
+    </div>
+  </div>
   {% endfor %}
 
   <hr>
 
   <form action="" method="post">
-    <label>Your Message: <textarea name="message" rows="10" cols="50">What is on your mind?</textarea></label><br />
+    <label>
+      Your Message:
+      <br>
+      <textarea name="message" rows="10" cols="50">What is on your mind?</textarea>
+    </label>
+    <br />
     <input type="submit" value="Submit" />
   </form>
 {% endblock content %}
