@@ -1,0 +1,14 @@
+{% extends "site_base.html" %}
+{% block content %}
+  <h1>Profile of {{ name }}</h1>
+  <h2>{{ name }} has {{ friends|length }} Friends</h2>
+  <ul>
+    {% for friend in friends %}
+      <li>
+        <a href="/users/{{ friend }}">
+          {{ friend }} is a Friend!
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock content %}

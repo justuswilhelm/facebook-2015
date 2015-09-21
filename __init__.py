@@ -131,6 +131,19 @@ def add_friend(name):
     user = session['user']
     if application.db.exists(name):
         application.db.sadd(user + ":friends", name)
+        application.db.sadd(name + ":friends", user)
         flash("You have added {} as a friend".format(name))
     return redirect('/friends')
 
+@application.route("/users/<name>")
+@login_required
+def show_user_profile(name):
+    if application.db.exists(name):
+        friends = list(filter(lambda e: e !=  name, [
+            a.decode() for a in application.db.smembers(
+                session['user'] + ':friends')]))
+        return render_template(
+            'profile.html', name=name, friends=friends)
+    else:
+        flash('User does not exist.')
+        return redirect('/')
