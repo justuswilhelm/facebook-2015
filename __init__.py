@@ -132,5 +132,5 @@ def add_friend(name):
     if application.db.exists(name):
         application.db.sadd(user + ":friends", name)
         flash("You have added {} as a friend".format(name))
-    return redirect('/')
+    return redirect('/friends')
 
