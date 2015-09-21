@@ -3,4 +3,15 @@
   <h1>
     There are no messages, you have no friends
   </h1>
+  {% for message in messages %}
+    <h2>{{ message.user }} - {{ message.time }}</h2>
+    <p>{{message.message }}</p>
+  {% endfor %}
+
+  <hr>
+
+  <form action="" method="post">
+    <label>Your Message: <textarea name="message" rows="10" cols="50">What is on your mind?</textarea></label><br />
+    <input type="submit" value="Submit" />
+  </form>
 {% endblock content %}

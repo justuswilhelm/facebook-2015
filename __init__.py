@@ -1,5 +1,8 @@
+from time import time
 from functools import wraps
 from os import getenv
+from pickle import dumps, loads
+from uuid import uuid4
 
 from flask import (
     flash,
@@ -47,6 +50,8 @@ def register_post():
     name = request.form['name']
     password = request.form['password']
 
+    assert name != 'messages'
+
     application.db.set(name, password)
     session['user'] = name
     flash("Thank you for registering.")
@@ -75,4 +80,21 @@ def login_post():
 @application.route("/messages", methods=['get'])
 @login_required
 def show_messages():
-    return render_template('messages.html')
+    messages = [
+        loads(message) for _, message in application.db.hgetall('messages').items()]
+    return render_template('messages.html', messages=messages)
+
+
+@application.route("/messages", methods=['post'])
+@login_required
+def post_message():
+    message = request.form['message']
+
+    message_object = {
+        'time': time(),
+        'message': message,
+        'user': session['user'],
+    }
+
+    application.db.hset('messages', str(uuid4()), dumps(message_object))
+    return redirect('/messages')
