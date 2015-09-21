@@ -53,6 +53,7 @@ def login_post():
     password = request.form['password']
 
     if application.db.get(name) == password:
+        session['user'] = name
         flash("You were logged in successfully.")
         return redirect('/')
     else:
