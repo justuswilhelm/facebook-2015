@@ -1,0 +1,21 @@
+{% extends "site_base.html" %}
+{% block content %}
+  <h1>Nice try, you still have no friends</h1>
+  <ul>
+    {% for friend in friends %}
+      <li>
+        {{ friend }} is your friend
+      </li>
+    {% endfor %}
+  </ul>
+  <h2>Add more friends</h2>
+  <ul>
+    {% for nofriend in nofriends %}
+      <li>
+        <a href="/friend/{{ nofriend }}/add">
+          Add {{ nofriend }} as a friend
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock content %}

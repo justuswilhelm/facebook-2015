@@ -50,8 +50,12 @@ def register_post():
     name = request.form['name']
     password = request.form['password']
 
-    assert name != 'messages'
-    assert name not in application.db
+    try:
+        assert ':' not in name
+        assert name != 'messages'
+        assert name not in application.db
+    except AssertionError:
+        return redirect('/register')
 
     application.db.set(name, password)
     session['user'] = name
@@ -69,7 +73,8 @@ def login_post():
     name = request.form['name']
     password = request.form['password']
 
-    if application.db.get(name).decode() == password:
+    if application.db.exists(
+            name) and application.db.get(name).decode() == password:
         session['user'] = name
         flash("You were logged in successfully.")
         return redirect('/')
@@ -101,3 +106,31 @@ def post_message():
 
     application.db.hset('messages', str(uuid4()), dumps(message_object))
     return redirect('/messages')
+
+
+@application.route("/friends")
+@login_required
+def show_friends():
+    friends = [
+        a.decode() for a in application.db.smembers(
+            session['user'] + ':friends')]
+    nofriends = list(filter(lambda e: ':' not in e,
+        [b.decode() for b in application.db.keys('*')]))
+    if 'messages' in nofriends:
+        nofriends.remove('messages')
+    if session['user'] in nofriends:
+        nofriends.remove(session['user'])
+
+    return render_template(
+        'friends.html', friends=friends, nofriends=nofriends)
+
+
+@application.route("/friend/<name>/add")
+@login_required
+def add_friend(name):
+    user = session['user']
+    if application.db.exists(name):
+        application.db.sadd(user + ":friends", name)
+        flash("You have added {} as a friend".format(name))
+    return redirect('/')
+
