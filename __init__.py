@@ -114,7 +114,7 @@ def show_friends():
     friends = [
         a.decode() for a in application.db.smembers(
             session['user'] + ':friends')]
-    nofriends = list(filter(lambda e: ':' not in e,
+    nofriends = list(filter(lambda e: ':' not in e and e not in friends,
         [b.decode() for b in application.db.keys('*')]))
     if 'messages' in nofriends:
         nofriends.remove('messages')
