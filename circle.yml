@@ -1,0 +1,9 @@
+test:
+  override:
+    - echo "No tests"
+
+deployment:
+  staging:
+    branch: master
+    heroku:
+      appname: facebook2015
